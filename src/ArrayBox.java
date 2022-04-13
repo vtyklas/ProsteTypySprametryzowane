@@ -1,56 +1,77 @@
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+
 
 
 public class ArrayBox<T extends Comparable> {
 
     Object[] arr;
     static int sizeCounter;
-    boolean uniqness;
+
 
     public ArrayBox(int c) {
         sizeCounter = 0;
         arr = new Object[c];
-        uniqness = true;
+
 
     }
+
 
     public boolean add(T t) {
-        boolean added = false;
-        boolean flag = false;
-        List<T> tempList = new ArrayList<>();
-        if (arr.length <= sizeCounter) {
 
+        // Dwa warianty jezeli jest wystarczajco miejsca to sprawdzmy czy wystepuje juz dany obiekt jezeli nie to dodajmy i ustawiamy
+        // flage dodanie i wychodzimy z petli.
+        //W drugim przypadku jezeli nie ma doc miejsca to najpierw sprawdzamy czy dany obiekt juz znajduje sie w naszym zbiorze
+        // jezeli tak to petla jest przerywana i metoda zwraca false. Jezeli nie jest dupikatem tworzymy kopie tablicy z jednym elementem wiecej
+        // po czym dodajmy dany element na pierwsze miejsce ktore jest nullem. Dzieki temu nie tworzymy pustych miejsc i tablica zawiera tylko tyle
+        //elementow ile powinna
+        boolean duplicateFlag = false;
+        boolean elementAdded = false;
+
+        if (arr.length > sizeCounter) {
             for (int i = 0; i < arr.length; i++) {
-                if (!t.toString().equals(arr[i].toString())) {
-                    tempList.add((T) arr[i]);
-
-                } else flag = true;
-
-            }
-            if (arr.length < tempList.size()) {
-                added = true;
-            }
-
-
-        }else {
-            for (int i = 0; i < arr.length; i++) {
-                if(arr[i] != null &&!t.toString().equals(arr[i].toString()) ){
-                    flag = true;
-                }else if(!flag) {
+                if (arr[i] != null) {
+                    if (t.toString().equals(arr[i].toString())) {
+                        return elementAdded;
+                    }
+                } else if (arr[i] == null && !elementAdded) {
                     arr[i] = t;
-                    added = true;
+                    elementAdded = true;
+                    sizeCounter++;
                 }
             }
+        } else {
+            for (int i = 0; i < arr.length; i++) {
 
+                if (arr[i] != null) {
+                    if (t.toString().equals(arr[i].toString())) {
+                        return elementAdded;
+                    }
+                }
+            }
+            if (true) {
+                Object[] temp = new Object[sizeCounter + 1];
 
+                for (int j = 0; j < arr.length; j++) {
+                    temp[j] = arr[j];
+                }
+                arr = temp;
 
+            }
+            for (int i = 0; i < arr.length; i++)
+            {
+                if (arr[i] == null)
+                {
+                    arr[i] = t;
+                    elementAdded = true;
+                    sizeCounter++;
+                }
+            }
         }
-
-        return added;
+        return elementAdded;
     }
-//
+
+
+    //
 //        if(arr.length<=sizeCounter){
 //            Object []temp = new Object[sizeCounter+1];
 //
@@ -102,10 +123,10 @@ public class ArrayBox<T extends Comparable> {
                 if (array[i] == arr[j]) {
                     flag = true;
                 } else
-                    if(arr[j] == null && !flag && !tempadd){
-                        arr[j] = array[i];
-                        tempadd = true;
-                        added = true;
+                if(arr[j] == null && !flag && !tempadd){
+                    arr[j] = array[i];
+                    tempadd = true;
+                    added = true;
                 }
 
             }
@@ -164,11 +185,11 @@ public class ArrayBox<T extends Comparable> {
         boolean isDelated = false;
         T temp = null;
         for (int i = 0; i < arr.length && !isDelated; i++) {
-           if(t.compareTo(arr[i])==0){
-               temp = (T)arr[i];
-               arr[i] = null;
-               isDelated = true;
-               break;
+            if(t.compareTo(arr[i])==0){
+                temp = (T)arr[i];
+                arr[i] = null;
+                isDelated = true;
+                break;
             }
         }
         if(isDelated){
