@@ -1,12 +1,11 @@
+import java.util.ArrayList;
 import java.util.Arrays;
-
-
+import java.util.Collections;
 
 public class ArrayBox<T extends Comparable> {
 
     Object[] arr;
     static int sizeCounter;
-
 
     public ArrayBox(int c) {
         sizeCounter = 0;
@@ -18,16 +17,10 @@ public class ArrayBox<T extends Comparable> {
 
     public boolean add(T t) {
 
-        // Dwa warianty jezeli jest wystarczajco miejsca to sprawdzmy czy wystepuje juz dany obiekt jezeli nie to dodajmy i ustawiamy
-        // flage dodanie i wychodzimy z petli.
-        //W drugim przypadku jezeli nie ma doc miejsca to najpierw sprawdzamy czy dany obiekt juz znajduje sie w naszym zbiorze
-        // jezeli tak to petla jest przerywana i metoda zwraca false. Jezeli nie jest dupikatem tworzymy kopie tablicy z jednym elementem wiecej
-        // po czym dodajmy dany element na pierwsze miejsce ktore jest nullem. Dzieki temu nie tworzymy pustych miejsc i tablica zawiera tylko tyle
-        //elementow ile powinna
-        boolean duplicateFlag = false;
         boolean elementAdded = false;
 
         if (arr.length > sizeCounter) {
+
             for (int i = 0; i < arr.length; i++) {
                 if (arr[i] != null) {
                     if (t.toString().equals(arr[i].toString())) {
@@ -40,27 +33,23 @@ public class ArrayBox<T extends Comparable> {
                 }
             }
         } else {
-            for (int i = 0; i < arr.length; i++) {
+            for (Object o : arr) {
 
-                if (arr[i] != null) {
-                    if (t.toString().equals(arr[i].toString())) {
+                if (o != null) {
+                    if (t.toString().equals(o.toString())) {
                         return elementAdded;
                     }
                 }
             }
-            if (true) {
-                Object[] temp = new Object[sizeCounter + 1];
 
-                for (int j = 0; j < arr.length; j++) {
-                    temp[j] = arr[j];
-                }
-                arr = temp;
+            Object[] temp = new Object[sizeCounter + 1];
 
-            }
-            for (int i = 0; i < arr.length; i++)
-            {
-                if (arr[i] == null)
-                {
+            System.arraycopy(arr, 0, temp, 0, arr.length);
+            arr = temp;
+
+
+            for (int i = 0; i < arr.length; i++) {
+                if (arr[i] == null) {
                     arr[i] = t;
                     elementAdded = true;
                     sizeCounter++;
@@ -70,69 +59,57 @@ public class ArrayBox<T extends Comparable> {
         return elementAdded;
     }
 
-
-    //
-//        if(arr.length<=sizeCounter){
-//            Object []temp = new Object[sizeCounter+1];
-//
-//            for (int i = 0; i < arr.length; i++)
-//            {
-//                temp[i] = arr[i];
-//            }
-//            arr = temp;
-//        }
-//
-//        // pętlą for dodajemy elelemnt na nowe puste miejsce, sprawdzajac czy nie jest taki sam jak poprzednie elementy
-//        for (int j = 0; j < arr.length; j++) {
-//            if (arr[j]!=null && !added) {
-//                if(t.toString().equals(arr[j].toString()))
-//                flag = true;
-//            } else
-//                if(arr[j] == null && !flag && !added){
-//                arr[j] = t;
-//                added = true;
-//                sizeCounter++;
-//
-//            }
-//
-//        }
-//        return added;
-
-
     public boolean addAll(T[] array)
     {
         boolean added = false;
-        boolean flag = false;
-        boolean tempadd = false;
+        boolean duplicateFlag = false;
+        int duplicate = 0;
 
-//        System.out.println(array.length);
-//        System.out.println(sizeCounter);
-        if(arr.length <= array.length+sizeCounter){
-            sizeCounter+= array.length;
-//            System.out.println(sizeCounter);
-            Object[] temp = new Object[sizeCounter];
-            for (int i = 0; i < arr.length; i++) {
-                temp[i] = arr[i];
+        ArrayList<Object> noDuplicateList= new ArrayList<>(); // tworzymy pusta liste ktora nie bedzie zawierala duplikatow
+        ArrayList<Object> tempList= new ArrayList<>(); // tworzymy liste tymczasowa ktora zawiera elementy dodawanej tablicy elementow
+        for (int i = 0; i < arr.length; i++) {
+            if(arr[i] != null)
+            {
+                noDuplicateList.add(arr[i]);
             }
-            arr = temp;
-
         }
+//        Collections.addAll(noDuplicateList, arr); // dodanie wszystkich elemntow tablicy arr do listy bez duplikatow
+////        System.out.println(noDuplicateList);
+        Collections.addAll(tempList,array); //dodanie wszystkich elementow tablicy array do listy tymczasowej
+//        System.out.println(tempList);
 
-        for (int i = 0; i < array.length; i++) {
-            for (int j = 0; j < arr.length; j++) {
-                if (array[i] == arr[j]) {
-                    flag = true;
-                } else
-                if(arr[j] == null && !flag && !tempadd){
-                    arr[j] = array[i];
-                    tempadd = true;
-                    added = true;
-                }
 
+            for (int i = 0; i < array.length; i++) {
+                duplicateFlag = false;
+                int index = i;
+                for (int j = 0; j < arr.length; j++)
+                {
+                    if(arr[j]==null){
+                        continue;
+                    }else
+
+                        if (array[i].toString().equals(arr[j].toString()))
+                        {
+                            duplicate++;
+                            duplicateFlag = true;
+                            if(duplicate==array.length)
+                            {
+                                return added;
+                            }
+                        }
+                    }
+                    if(!duplicateFlag)
+                    {
+                        noDuplicateList.add(tempList.get(index));
+
+    //                    System.out.println(noDuplicateList);
+
+                        added = true;
+                    }
+                arr = noDuplicateList.toArray();
             }
-            flag = false;
-            tempadd = false;
-        }
+
+
 
         return added;
     }

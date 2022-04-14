@@ -36,7 +36,6 @@ public class Student extends  Osoba{
                 return true;
             }
         }
-        System.out.println("jestem tu");
         return false;
     }
 
