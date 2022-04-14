@@ -12,8 +12,9 @@ public class Student extends  Osoba{
     {
             if(o instanceof Student)
             {
-                super.compareTo(o);
                 o = (Student) o;
+                super.compareTo(o);
+
                 if(this.numerGrupy > ((Student) o).numerGrupy)
                 {
                     return 1;
@@ -29,14 +30,12 @@ public class Student extends  Osoba{
     }
 
     public boolean equals(Osoba o){
-        if(o instanceof Student){
-            super.equals(o);
+        if(o instanceof Student)
             o = (Student) o;
-            if(this.numerGrupy == ((Student) o).numerGrupy){
-                return true;
-            }
-        }
-        return false;
+            super.equals(o);
+            return this.numerGrupy == ((Student) o).numerGrupy;
+
+
     }
 
     @Override

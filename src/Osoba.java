@@ -21,29 +21,15 @@ public class Osoba implements Comparable<Osoba>{
                             return 0;
                         }
                 else
-                    if(this.wiek>o.wiek) {
-                        return 1;
-                    }else
-                        if(this.wiek<o.wiek) {
-                        return -1;
-                        }else return 0;
+                        return Integer.compare(this.wiek, o.wiek);
 
 
         }
 
         public boolean equals(Osoba o){
-                if(o == null && getClass() != o.getClass() ){
-                    System.out.println("Jestem na nullu"
-                    );
-                    return false;
-                }
 
-                if(this.nazwisko.equals(o.nazwisko) && this.wiek == o.wiek){
-                    System.out.println("nazwisko wiek ok");
-                    return true;
-                }
+            return o!=null&&this.nazwisko.equals(o.nazwisko) && this.wiek == o.wiek;
 
-            return false;
         }
 
 

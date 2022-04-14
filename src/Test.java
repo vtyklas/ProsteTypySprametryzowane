@@ -25,7 +25,7 @@ public class Test {
         System.out.println(bst.max());
 
         ArrayBox<Integer> bi = new ArrayBox<>(2);
-        Integer[] ti = new Integer[] {Integer.valueOf(1), 2, 3,3,3,3,3,3,3,3,3};
+        Integer[] ti = new Integer[] {Integer.valueOf(1), 2, 3,3,3,3,3,3,3,3,3,4};
 
         bi.addAll(ti);
 
@@ -35,7 +35,7 @@ public class Test {
         String[] ts = new String[] {"cpp", new String("java")};
         bs.addAll(ts);
         bs.print();
-        bs.swap(0,1);
+        bs.swap(1,12);
         bs.print();
 
         bs.delate("cpp");
