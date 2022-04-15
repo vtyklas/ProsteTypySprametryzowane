@@ -32,7 +32,7 @@ public class Test {
         bi.print();
 
         ArrayBox<String> bs = new ArrayBox<>(1);
-        String[] ts = new String[] {"cpp", new String("java")};
+        String[] ts = new String[] {"cpp", "java"};
         bs.addAll(ts);
         bs.print();
         bs.swap(1,12);
@@ -42,6 +42,10 @@ public class Test {
         bs.print();
         bs.delate("java");
         bs.print();
+
+        bi.search(3);
+        Osoba osoba = new Osoba("Kowalski",19);
+        bo.search(osoba);
 
     }
 }

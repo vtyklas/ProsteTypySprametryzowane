@@ -181,6 +181,27 @@ public class ArrayBox<T extends Comparable> {
         return isDelated;
     }
 
+    public int search(T t)
+    {
+        int index = 0;
+        for (Object o : arr)
+        {
+
+            if(t.toString().equals(o.toString()))
+            {
+                System.out.println("Podany elelemnt znajduje sie w tablicy. Jest to element na indeksie= "+index+" i jest to: "+arr[index]);
+                return index;
+            }
+            index++;
+            }
+        System.out.println("Podany element nie znajduje sie w tablicy");
+        return -1;
+            }
+
+
+
+
+
 
 
     @Override
