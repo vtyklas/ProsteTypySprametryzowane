@@ -54,16 +54,19 @@ public class ArrayBox<T extends Comparable> {
 
     public boolean addAll(T[] array) //Wykorztujemy metodę add w pętli
     {
+        int isAdded = 0;
         boolean added = true;
-        for (int i = 0; i < array.length; i++)
-        {
-            if(search(array[i])==-1)
-            {
-                add(array[i]);
-                added = true;
+        for (T t : array) {
+            if (search(t) == -1) {
+                add(t);
+                isAdded++;
             }
         }
-        return added;
+        if(isAdded>0)
+        {
+            return added;
+        }
+        else return added = false;
 
     }
 
@@ -134,7 +137,7 @@ public class ArrayBox<T extends Comparable> {
     public boolean swap(int a,int b){
         try{
             T temp;
-            temp = (T)arr[a];
+            temp = (T )arr[a];
             arr[a] = arr[b];
             arr[b] = temp;
             return true;

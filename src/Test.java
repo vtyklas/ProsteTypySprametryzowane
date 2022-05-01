@@ -4,7 +4,7 @@ public class Test {
     public static void main(String[] args)
     {
         ArrayBox<Osoba>  bo = new ArrayBox<>(2);
-
+        ArrayBox.class.getName();
         bo.add(new Osoba("Kowalski", 19));                        // nazwisko = "Kowalki", wiek = 19
         bo.add(new Student("Kowalska", 18, 100));                    // nazwisko, wiek, grupa = 100
         bo.add(new Student("Kowalska", 20, 200));
@@ -40,7 +40,8 @@ public class Test {
         bs.print();
         bs.swap(0,1);
         bs.print();                                                                         // java, cpp
-
+        bs.delate("cpp");
+        bs.print();
 
 
 
