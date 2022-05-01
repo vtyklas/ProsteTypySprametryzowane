@@ -1,7 +1,7 @@
 public class Osoba implements Comparable<Osoba>{
 
-    String nazwisko;
-    int wiek;
+    private String nazwisko;
+    private int wiek;
 
     public Osoba(String nazwisko, int wiek) {
         this.nazwisko = nazwisko;
@@ -10,19 +10,11 @@ public class Osoba implements Comparable<Osoba>{
 
     @Override
     public int compareTo(Osoba o) {
-        if(this.nazwisko.compareTo(o.nazwisko)>0) {
-            return 1;
+        int result = this.nazwisko.compareTo(o.nazwisko);
+        if(result == 0){
+            return Integer.compare(this.wiek,o.wiek);
         }else
-                if(this.nazwisko.compareTo(o.nazwisko)<0) {
-
-                    return -1;
-                }else
-                    if(this.nazwisko.compareTo(o.nazwisko)==0){
-                            return 0;
-                        }
-                else
-                        return Integer.compare(this.wiek, o.wiek);
-
+            return result;
 
         }
 
@@ -35,10 +27,9 @@ public class Osoba implements Comparable<Osoba>{
 
     @Override
     public String toString() {
-        return "Osoba{" +
-                "nazwisko='" + nazwisko + '\'' +
-                ", wiek=" + wiek +
-                '}';
+        return  "\n"+getClass().getName() + "\n" +
+                "Nazwisko: "+ nazwisko +
+                "\nWiek:"+ wiek + "\n";
     }
 }
 

@@ -1,143 +1,134 @@
-import java.util.ArrayList;
+
 import java.util.Arrays;
-import java.util.Collections;
+
 
 public class ArrayBox<T extends Comparable> {
 
-    Object[] arr;
-    static int sizeCounter;
+
+    private Object[] arr;
+    private static int currentSize; //Zmienna currentSize pokazuje aktualną ilość elementów tablicy arr.
 
     public ArrayBox(int c) {
-        sizeCounter = 0;
+        currentSize = 1;
         arr = new Object[c];
 
     }
 
-    public boolean add(T t) {
 
-        boolean elementAdded = false; //flaga sprawdzajca czy element zostal dodany czy nie
+    public boolean add(T t) { //jeżeli currentSize jest wystarczający sprawdzamy czy dany elelemnt się nie powtarza jezeli tak to go dodajemy false wpp.
 
-        if (arr.length > sizeCounter) { // sprawdzenie czy dlugosc tablicy jest wystarczajaca do ewentualnego pomieszczenia nowego elementu
-
-            for (int i = 0; i < arr.length; i++) {
+        try {
+            for (int i = 0; i < currentSize; i++)
+            {
                 if (arr[i] != null) {
-                    if (t.toString().equals(arr[i].toString())) {  // sprawdzenie czy dodawany element nie jest duplikatem jeżeli tak to metoda konczy dzialnie z wynikiem false
-                        return elementAdded;
+                    if (search(t) != -1)
+                    {
+                        return false;
                     }
-                } else if (arr[i] == null) { //jezeli dany indeks tablicy jest pusty to dodajemy element t i zwiekszamy licznik dlugosci tablicy i zmieniamy flage na dodany true
-                    arr[i] = t;
-                    elementAdded = true;
-                    sizeCounter++;
-                }
-            }
-        } else {  // jezeli tablica nie pomiesci nowego elementu to najpierw sprawdzamy czy dany elelemnt nie jest duplikatem w pierwotnej tablicy jezeli jest metoda konczy dzialnie zwracajac false
-            for (Object o : arr) {
-
-                if (o != null) {
-                    if (t.toString().equals(o.toString())) {
-                        return elementAdded;
+                } else if (arr[i] == null)
+                    {
+                        arr[i] = t;
+                        currentSize++;
+                        return true;
                     }
-                }
             }
+        } catch (ArrayIndexOutOfBoundsException e) { // jeżeli curretSize jest wiekszy tworzymy nowa tablice o 1 wieksza kopiujemy elelemnty starej i na pole null dodajemy elelemnt
+            Object[] temp = new Object[arr.length + 1];
 
-            Object[] temp = new Object[arr.length + 1]; // jezeli dany elelemnt nie jest duplikatem towrzymy tablice o dlugosci arr.length +1
-
-            System.arraycopy(arr, 0, temp, 0, arr.length); // kopiujemy zawartosc tablicy arr do temp i przypisujemy wratosci temp do arr
+            System.arraycopy(arr, 0, temp, 0, arr.length);
             arr = temp;
 
-
-            for (int i = 0; i < arr.length; i++) { // dodajemy na puste miejsce elelemnt t zwiekszajac liczni kspradzajacy rozmiar tablicy
-                if (arr[i] == null) {
+            for (int i = 0; i < arr.length; i++)
+            {
+                if (arr[i] == null)
+                {
                     arr[i] = t;
-                    elementAdded = true;
-                    sizeCounter++;
+                    currentSize++;
+                    return true;
                 }
             }
         }
-        return elementAdded;
+        return false;
     }
 
-    public boolean addAll(T[] array)
-    {
-        boolean added = false;
-        boolean duplicateFlag; // flaga duplikatu
-        int duplicate = 0; // licznik ilosci duplikatow ktory odejmiemy zeby okreslic finalny rozmiar nowej tablicy arr
 
-        ArrayList<Object> noDuplicateList= new ArrayList<>(); // tworzymy pusta liste ktora nie bedzie zawierala duplikatow
-        ArrayList<Object> tempList= new ArrayList<>(); // tworzymy liste tymczasowa ktora zawiera elementy dodawanej tablicy elementow
-        for (Object o : arr) { // kopiowanie elemntow arr do listy bez duplikatow z pominieciem elementow null
-            if (o != null) {
-                noDuplicateList.add(o);
+    public boolean addAll(T[] array) //Wykorztujemy metodę add w pętli
+    {
+        boolean added = true;
+        for (int i = 0; i < array.length; i++)
+        {
+            if(search(array[i])==-1)
+            {
+                add(array[i]);
+                added = true;
             }
         }
-
-        Collections.addAll(tempList,array); //dodanie wszystkich elementow tablicy array do listy tymczasowej
-
-            for (int i = 0; i < array.length; i++) { // sprawdzamy elementy dodawane(array) do elemntow znajdujacych sie w arr
-                duplicateFlag = false;
-                int index = i; // indeks sluzy do dodanie odpowideniego elemntu z array do listy bez duplikatow
-
-                for (Object o : arr) { //sprawdzamy czy tablica nei zawiera pustych elementow po to ze nie mozemy porownywac metoda equals do nulla iteracja jest pomijana jezeli null
-                    if (o == null)
-                    {
-                        continue;
-                    } else // sprawdzamy czy element z array pokrywa sie z elementem arr, jezeli tak licznik duplikatu +1 oraz flaga ustawiona na true
-                        if (array[i].toString().equals(o.toString()))
-                        {
-                        duplicate++;
-                        duplicateFlag = true;
-
-                        if (duplicate == array.length) // sprawdzenie jezeli wszystkie elemnty ktore probujmy dodac pokrywaja sie z elemntami juz zawartymi w tablicy automatycznie konczymy metoda z wynikiem false
-                        {
-                            return added;
-                        }
-                    }
-                }
-                    if(!duplicateFlag) //jezeli flaga w iteracji array jest ustawiona na false to dodajemy do listy bez duplikatow elemkent z listy tymczasowej o indexie zgodnym z iteracja petli for
-                    {
-                        noDuplicateList.add(tempList.get(index));
-
-    //                    System.out.println(noDuplicateList);
-
-                        added = true; //ustawiamy flage zwracajaca wynik metody na true
-                    }
-                arr = noDuplicateList.toArray(); // przekstzalcienie listy bez duplikatow na tablice arr
-            }
-
-
-
         return added;
+
     }
 
     public T min() {
-        T min = (T) arr[0]; // przyjumey ze min znajduje sie na indeksie 0 tablicy arr
+/*While sprawdza pierwszy indeks który nie jest nullem i przypisuje go do wartości min.
+*Jeżeli tablica jest samymi nulami zwraca w bloku catch stosowną informację.
+*/
+        try {
 
-        for (Object o : arr) {
-            if (min.compareTo((T) o) > 0) //wskazanie elementu min
-                min = (T) o;
+            int index = 0;
+            while (arr[index] == null)
+            {
+                index++;
+            }
+            T min = (T) arr[index];
 
+            for (Object o : arr) {
+                if (o != null && min.compareTo((T) o ) >=1)
+                {
+                    min = (T) o;
+                }
+
+            }
+            System.out.print("MIN z "+ getClass().getName());
+            return min;
+        }catch (NullPointerException e){
+            System.out.println("Błąd - tablica zawiera same wartości null!");
         }
-
-        return min;
+        return null;
     }
 
     public T max() {
-        T max = (T) arr[0];
+        int index = 0;
+        while (arr[index] == null) // Sprawdzamy czy istnieje element tablicy który nie jest nullem i przypisujemy go do początkowej wartości max
+        {
+            index++;
 
-        for (Object o : arr) {
-            if (max.compareTo((T) o) < 0)
-                max = (T) o;
-
+            if (index == arr.length) // W wypadku kiedy cała tablica jest nullami wyświetlany jest komunikat
+            {
+                System.out.println("Tablica jest pusta");
+                return null;
+            }
         }
+            T max = (T) arr[index];
 
-        return max;
+            for (Object o : arr) //Dla każdego elementu tablicy który nie jest nullem sprawdzamy który element jest "większy" i przypisujemy go do wartości max
+            {
+                if (o != null && max.compareTo((T) o) < 0)
+                    max = (T) o;
+
+            }
+            return max;
     }
 
     public void print(){
-        for (Object o : arr) {
-            System.out.print(o + " ");
+        System.out.println(getClass().getName());
+        System.out.println("--------------");
+        for (Object o : arr)
+        {
+            System.out.print(o);
+
         }
         System.out.println();
+        System.out.println("--------------");
+
     }
 
     public boolean swap(int a,int b){
@@ -156,59 +147,54 @@ public class ArrayBox<T extends Comparable> {
             {
                 System.out.println("Indeks b: "+b+ " nie jest indeksem tablicy");
                 return false;
-            }else System.out.println("Podane indeksy tablicy nie istanieja");
+            }else System.out.println("Podane indeksy tablicy nie istanieja lub sa puste");
             return false;
         }
 
-
     }
 
-    public boolean delate(T t){
+    public boolean delate(T t){ // sprawdza czy podany elelemnt znajduje sie w tablicy i jeżeli tak to zamienia podany elelemnt na null
 
-        boolean isDelated = false;
-        T temp = null;
-        for (int i = 0; i < arr.length; i++) {
-            if(arr[i]!=null && t.compareTo(arr[i])==0){
-                temp = (T)arr[i];
-                arr[i] = null;
-                isDelated = true;
+        int index;
+        for (int i = 0; i < arr.length; i++)
+        {
+            try
+            {
+                index = search(t);
+                arr[index] = null;
+                break;
+            }catch(ArrayIndexOutOfBoundsException e)
+            {
+                System.out.println("Tablica jest pusta lub podana wartość metody nie istnieje");
                 break;
             }
+
         }
-        if(isDelated){
-            System.out.println("Usunieto wskazany element<"+temp+">");
-        }else System.out.println("Nie mozna usunac podany element nie istnieje w zestawie");
-        return isDelated;
+
+
+        return true;
     }
 
-    public int search(T t)
-    {
+    public int search(T t) { // sprawdza czy podany element jest równy zadanemu i zwraca wartość indeksu na którym się znajduje lub -1 wpp. Na tej zasadzie wykorzystujemy ją do metody add.
         int index = 0;
         for (Object o : arr)
         {
-
-            if(t.toString().equals(o.toString()))
+            if (o != null)
             {
-                System.out.println("Podany elelemnt znajduje sie w tablicy. Jest to element na indeksie= "+index+" i jest to: "+arr[index]);
-                return index;
+                if (t.toString().equals(o.toString()))
+                    {
+                        return index;
+                    }
             }
             index++;
-            }
-        System.out.println("Podany element nie znajduje sie w tablicy");
+        }
+
         return -1;
-            }
-
-
-
-
-
-
+    }
 
     @Override
     public String toString() {
-        return "ArrayBox{" +
-                "arr=" + Arrays.toString(arr) +
-                '}';
+        return Arrays.toString(arr);
     }
 
 

@@ -1,51 +1,49 @@
-
+import java.util.*;
 
 public class Test {
     public static void main(String[] args)
     {
-    ArrayBox<Osoba> bo = new ArrayBox<>(2);
-    bo.add(new Osoba("Kowalski",19));
-    bo.add(new Student("Kowalska",18,100));
-    bo.add(new Student("Kowalska",20,200));
-    bo.add(new Student("Kowalska",20,200));
-    bo.print();
+        ArrayBox<Osoba>  bo = new ArrayBox<>(2);
 
-    Osoba[] to = new Osoba[] {new Osoba("Nowak", 21),new Osoba("Nowak", 21),new Osoba("Nowak", 21), new Student("Nowak",22,200),new Osoba("Nowak", 25),};
-    bo.addAll(to);
-    bo.print();
+        bo.add(new Osoba("Kowalski", 19));                        // nazwisko = "Kowalki", wiek = 19
+        bo.add(new Student("Kowalska", 18, 100));                    // nazwisko, wiek, grupa = 100
+        bo.add(new Student("Kowalska", 20, 200));
 
-        System.out.println(bo.min());
+        Osoba[] to = new Osoba[] {new Osoba("Nowak", 21), new Student("Nowak", 22, 200)};
+        bo.addAll(to);
+
+        bo.print();
+
+//        bo.delate(new Osoba( "Kowalski",19));
+//        bo.delate((new Student("Kowalska", 18, 100)));
+
+        bo.print();
+
+        System.out.println(bo.min());                                           // Student 1: Kowalska, 18, 100
 
         ArrayBox<Student> bst = new ArrayBox<>(1);
         bst.add(new Student("Nowacka", 24, 100));
         bst.add(new Student("Nowacka", 24, 300));
         bst.add(new Student("Nowacka", 24, 200));
-        bst.add(new Student("Nowacka", 24, 200));
         bst.print();
-        System.out.println(bst.max());
+        System.out.println("MAX: "+bst.max());                                          // Student 5: Nowacka, 24, 300
 
         ArrayBox<Integer> bi = new ArrayBox<>(2);
-        Integer[] ti = new Integer[] {Integer.valueOf(1), 2, 3,3,3,3,3,3,3,3,3,4};
-
+        Integer[] ti = new Integer[] {Integer.valueOf(1), 1,1,1,1,1,2, 3};
         bi.addAll(ti);
 
-        bi.print();
+        bi.print();                                                                          // 1, 2, 3
 
         ArrayBox<String> bs = new ArrayBox<>(1);
-        String[] ts = new String[] {"cpp", "java"};
+        String[] ts = new String[] {"cpp", new String("java")};
         bs.addAll(ts);
         bs.print();
-        bs.swap(1,12);
-        bs.print();
+        bs.swap(0,1);
+        bs.print();                                                                         // java, cpp
 
-        bs.delate("cpp");
-        bs.print();
-        bs.delate("java");
-        bs.print();
 
-        bi.search(3);
-        Osoba osoba = new Osoba("Kowalski",19);
-        bo.search(osoba);
+
+
 
     }
 }
