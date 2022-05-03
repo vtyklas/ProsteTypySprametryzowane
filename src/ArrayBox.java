@@ -126,7 +126,7 @@ public class ArrayBox<T extends Comparable> {
         System.out.println("--------------");
         for (Object o : arr)
         {
-            System.out.print(o);
+            System.out.print(o+" ");
 
         }
         System.out.println();
