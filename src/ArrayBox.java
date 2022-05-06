@@ -1,4 +1,5 @@
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 
@@ -16,7 +17,8 @@ public class ArrayBox<T extends Comparable> {
     }
 
 
-    public boolean add(T t) { //jeżeli currentSize jest wystarczający sprawdzamy czy dany elelemnt się nie powtarza jezeli tak to go dodajemy false wpp.
+    public boolean add(T t)
+    { //jeżeli currentSize jest wystarczający sprawdzamy czy dany elelemnt się nie powtarza jezeli tak to go dodajemy false wpp.
 
         try {
             for (int i = 0; i < currentSize; i++)
@@ -45,9 +47,9 @@ public class ArrayBox<T extends Comparable> {
                 {
                     arr[i] = t;
                     currentSize++;
-                    return true;
                 }
             }
+            return true;
         }
         return false;
     }
@@ -63,9 +65,7 @@ public class ArrayBox<T extends Comparable> {
                 isAdded = true;
             }
         }
-       if(isAdded) return true;
-
-        return false;
+        return isAdded;
 
     }
 
@@ -83,13 +83,13 @@ public class ArrayBox<T extends Comparable> {
             T min = (T) arr[index];
 
             for (Object o : arr) {
-                if (o != null && min.compareTo((T) o ) >=1)
+                if (o != null && min.compareTo(o) >=1)
                 {
                     min = (T) o;
                 }
 
             }
-            System.out.print("MIN z "+ getClass().getName() +" " + this.ID);
+            System.out.print("MIN z "+ getClass().getName() +" " + ID);
             return min;
         }catch (NullPointerException e){
             System.out.println("Błąd - tablica zawiera same wartości null!");
@@ -109,23 +109,28 @@ public class ArrayBox<T extends Comparable> {
 
             for (Object o : arr)
             {
-                if (o != null && max.compareTo((T) o ) < 0)
+                if (o != null && max.compareTo(o) < 0)
                 {
                     max = (T) o;
                 }
             }
-            System.out.print("MAX z "+ ArrayBox.class.getName() + " " + this.ID);
+            System.out.print("MAX z "+ ArrayBox.class.getName() + " " + ID);
 
             return max;
         }catch (NullPointerException |ArrayIndexOutOfBoundsException e)
         {
-            System.out.println("Błąd - tablica " + getClass().getName() + " " +this.ID +  " zawiera same wartości null lub jest pusta!");
+            System.out.print("Błąd - tablica " + getClass().getName() + " " + ID +  " jest ");
+            return (T) String.valueOf("pusta!");
         }
-        return null;
+
+    }
+
+    public static int getID() {
+        return ID;
     }
 
     public void print(){
-        System.out.println(getClass().getName() + " " + this.ID);
+        System.out.println(getClass().getName() + " " + getID());
         System.out.println("--------------");
         for (Object o : arr)
         {
@@ -144,37 +149,43 @@ public class ArrayBox<T extends Comparable> {
             arr[b] = temp;
             return true;
         }catch(ArrayIndexOutOfBoundsException | NullPointerException e){
-            if(a>arr.length && b<arr.length || a<0)
+            if((a>=arr.length || a<0) && (b<arr.length && b>=0))
             {
-                System.out.println("Indeks a: "+a+ " nie jest indeksem tablicy " + ArrayBox.class + " " + this.ID);
+                System.out.println("Indeks "+a+ " nie jest indeksem tablicy " + ArrayBox.class + " " + ID);
                 return false;
-            }else if(b>arr.length && a<arr.length || b<0)
+            }else if((b>=arr.length || b<0) && (a<arr.length && a>=0))
             {
-                System.out.println("Indeks b: "+b+ " nie jest indeksem tablicy " + ArrayBox.class + " " + this.ID);
+                System.out.println("Indeks "+b+ " nie jest indeksem tablicy " + ArrayBox.class + " " + ID);
                 return false;
-            }else System.out.println("Podane indeksy tablicy nie istanieja lub sa puste");
+            }else System.out.println("Podane indeksy tablicy nie istanieja");
             return false;
         }
 
     }
 
-    public boolean delate(T t){ // sprawdza czy podany elelemnt znajduje sie w tablicy i jeżeli tak to zamienia podany elelemnt na null
-
-        int indexOfSameElement;
-        for (int i = 0; i < arr.length; i++)
-        {
+    public boolean delate(T t)
+    { // sprawdza czy podany elelemnt znajduje sie w tablicy i jeżeli tak to zamienia podany elelemnt na null
+        int indexOfSameElement = -1;
             try
             {
-                indexOfSameElement = search(t);
-                arr[indexOfSameElement] = null;
-                return true;
+                while(indexOfSameElement == -1) {
+                    indexOfSameElement = search(t);
+                    arr[indexOfSameElement] = null;
+                }
+                if(indexOfSameElement !=-1) {
+                    ArrayList<T> tempList = new ArrayList<>();
+                    for(Object o : arr){
+                        if(o !=null)
+                        tempList.add((T) o);
+                    }
+                    arr = tempList.toArray();
+                }
             }catch(ArrayIndexOutOfBoundsException e)
             {
                 System.out.println("Tablica jest pusta lub podana wartość metody nie istnieje");
                 return false;
             }
-        }
-        return false;
+            return false;
     }
 
     public int search(T t) { // sprawdza czy podany element jest równy zadanemu i zwraca wartość indeksu na którym się znajduje lub -1 wpp. Na tej zasadzie wykorzystujemy ją do metody add.
@@ -183,7 +194,7 @@ public class ArrayBox<T extends Comparable> {
         {
             if (o != null)
             {
-                if (t.equals(o)) {return index;}
+                if (t.toString().equals(o.toString())) {return index;}
             }
             index++;
         }
